@@ -36,7 +36,7 @@ def calc_top7_avg_cidades(df1, coluna, coluna_y, coluna_filtro, valor_filtro):
 
 def cal_top10_cidade (df1, coluna,nome_y):
     cols = ['City','nome_pais',coluna]
-    aux = df1.loc[:,cols].groupby(['City',coluna,'nome_pais']).count().reset_index().sort_values([coluna], ascending = False).head(top_slider)
+    aux = df1.loc[:,cols].groupby(['City','nome_pais']).count().reset_index().sort_values([coluna], ascending = False).head(top_slider)
     fig = px.bar(aux, x='City', y = coluna, labels = { 'City' : 'Cidades', coluna : nome_y,'nome_pais' : 'Paises'}, 
             color = 'nome_pais')
     return fig
@@ -204,8 +204,13 @@ with tab1:
             st.plotly_chart(fig, use_container_width = True)
 
     with st.container():
-        fig = cal_top10_cidade (df1, coluna = 'Cuisines',nome_y = 'Quantidade de tipos de Culinária')
-        fig.update_layout(title_text=f'Top {top_slider} Cidades com Restauranyes com tipos de Culinária Distinta', title_x=0.1)
+        cols = [ 'City', 'Cuisines','nome_pais']
+        cidade_culinaria = df1.loc[:,cols].groupby(['City', 'Cuisines','nome_pais']).count().reset_index()
+        aux = cidade_culinaria.groupby(['City','nome_pais']).count().sort_values(['Cuisines'], ascending = False).reset_index().head(10)
+        fig = px.bar(aux, x='City', y = 'Cuisines', title = 'Top 10 Cidades com Restauranyes com tipos de Culinária Distinta', 
+                labels = { 'City' : 'Cidades', 'Cuisines' : 'Culinária','nome_pais' : 'Paises'}, 
+               color = 'nome_pais')
+        fig.update_layout(title_text=f'Top {top_slider} Cidades com Restaurantes com tipos de Culinária Distinta', title_x=0.1)
         fig.update_traces(texttemplate = '%{y}',textposition='inside')
         st.plotly_chart(fig, use_container_width = True)
         
