@@ -36,7 +36,7 @@ def calc_top7_avg_cidades(df1, coluna, coluna_y, coluna_filtro, valor_filtro):
 
 def cal_top10_cidade (df1, coluna,nome_y):
     cols = ['City','nome_pais',coluna]
-    aux = df1.loc[:,cols].groupby(['City',,coluna,'nome_pais']).count().reset_index().sort_values([coluna], ascending = False).head(top_slider)
+    aux = df1.loc[:,cols].groupby(['City',coluna,'nome_pais']).count().reset_index().sort_values([coluna], ascending = False).head(top_slider)
     fig = px.bar(aux, x='City', y = coluna, labels = { 'City' : 'Cidades', coluna : nome_y,'nome_pais' : 'Paises'}, 
             color = 'nome_pais')
     return fig
